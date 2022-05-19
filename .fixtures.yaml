@@ -1,0 +1,7 @@
+fixtures:
+  repositories:
+    apt: https://github.com/puppetlabs/puppetlabs-apt.git
+    epel: https://github.com/voxpupuli/puppet-epel.git
+    logrotate: https://github.com/voxpupuli/puppet-logrotate.git
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+    yumrepo_core: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git

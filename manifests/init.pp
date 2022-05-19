@@ -1,41 +1,187 @@
-# == Class: falco
+# @summary Guides the basic setup and installation of Falco on your system.
+#
+# When this class is declared with the default options, Puppet:
+#
+# * Installs the appropriate Falco software package and installs the falco-probe kernel module for your operating system.
+# * Creates the required configuration file `/etc/Falco/falco.yaml`. By default only syslog output is enabled.
+# * Starts the falco service.
+#
+# @example Using defaults
+#   include falco
+#
+# @example Enabling file output
+#   class { 'falco':
+#     file_output => {
+#       'enabled'    => 'true',
+#       'keep_alive' => 'false',
+#       'filename'   => '/var/log/falco-events.log',
+#     },
+#   }
+#
+# @example Enabling program output
+#   class { 'falco':
+#     json_output => 'true',
+#     program_output => {
+#       'enabled'    => 'true',
+#       'keep_alive' => 'false',
+#       'program'    => 'curl http://some-webhook.com'
+#     },
+#   }
+#
+# @param [Array] rules_file
+#   File(s) or Directories containing Falco rules, loaded at startup.
+#   The name "rules_file" is only for backwards compatibility.
+#   If the entry is a file, it will be read directly. If the entry is a directory,
+#   every file in that directory will be read, in alphabetical order.
+#
+#   falco_rules.yaml ships with the falco package and is overridden with
+#   every new software version. falco_rules.local.yaml is only created
+#   if it doesn't exist. If you want to customize the set of rules, add
+#   your customizations to falco_rules.local.yaml.
+#
+#   The files will be read in the order presented here, so make sure if
+#   you have overrides they appear in later files.
+#
+# @param [Boolean] json_output
+#   Whether to output events in json or text
+#
+# @param [Boolean] json_include_output_property
+#   When using json output, whether or not to include the "output" property
+#   itself (e.g. "File below a known binary directory opened for writing
+#   (user=root ....") in the json output.
+#
+# @param [Boolean] log_stderr
+#   Send information logs to stderr Note these are *not* security
+#   notification logs! These are just Falco lifecycle (and possibly error) logs.
+#
+# @param [Boolean] log_syslog
+#   Send information logs to stderr Note these are *not* security
+#   notification logs! These are just Falco lifecycle (and possibly error) logs.
+#
+# @param [Enum['alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug']] log_level
+#   Minimum log level to include in logs. Note: these levels are
+#   separate from the priority field of rules. This refers only to the
+#   log level of falco's internal logging. Can be one of "emergency",
+#   "alert", "critical", "error", "warning", "notice", "info", "debug".
+#
+# @param [Enum['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'informational', 'debug']] priority
+#   Minimum rule priority level to load and run. All rules having a
+#   priority more severe than this level will be loaded/run.  Can be one
+#   of "emergency", "alert", "critical", "error", "warning", "notice",
+#   "informational", "debug".
+#
+# @param [Boolean] buffered_outputs
+#   Whether or not output to any of the output channels below is
+#   buffered. Defaults to false
+#
+# @param [Integer] outputs_rate
+#   The number of tokens (i.e. right to send a notification) gained per second.
+#
+# @param [Integer] outputs_max_burst
+#   The maximum number of tokens outstanding.
+#
+# @param [Hash] syslog_output
+#   A hash to configure the syslog output.
+#   See the template for available keys.
+#
+# @param [Hash] file_output
+#   A hash to configure the file output.
+#   See the template for available keys.
+#
+# @param [Hash] stdout_output
+#   A hash to configure the stdout output.
+#   See the template for available keys.
+#
+# @param [Hash] webserver
+#   A has to configure the webserver.
+#   See the template for available keys.
+#
+# @param [Hash] program_output
+#   A hash to configure the program output.
+#   See the template for available keys.
+#
+# @param [Hash] http_output
+#   A hash to configure the http output.
+#   See the template for available keys.
+#
+# @param [String[1]] package_ensure
+#   A string to be passed to the package resource's ensure parameter
+#
+# @param [Variant[Boolean, Enum['running', 'stopped']]] service_ensure
+#    Desired state of the Falco service
+#
+# @param [Boolean] service_enable
+#    Start the Falco service on boot?
+#
+# @param [Boolean] service_restart
+#    Does the service support restarting?
+#
+#
 class falco (
   # Configuration parameters
-  $rules_file                   = $falco::params::rules_file,
-  $json_output                  = $falco::params::json_output,
-  $json_include_output_property = $falco::params::json_include_output_property,
+  Array $rules_file = [
+    '/etc/falco/falco_rules.yaml',
+    '/etc/falco/falco_rules.local.yaml',
+    '/etc/falco/k8s_audit_rules.yaml',
+    '/etc/falco/rules.d',
+  ],
+  Boolean $json_output = false,
+  Boolean $json_include_output_property = true,
 
-  $log_stderr                   = $falco::params::log_stderr,
-  $log_syslog                   = $falco::params::log_syslog,
-  $log_level                    = $falco::params::log_level,
-  $priority                     = $falco::params::priority,
+  Boolean $log_stderr = true,
+  Boolean $log_syslog = true,
+  Enum['alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug'] $log_level = 'info',
+  Enum['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'informational', 'debug'] $priority = 'debug',
 
-  $buffered_outputs             = $falco::params::buffered_outputs,
-  $outputs_rate                 = $falco::params::outputs_rate,
-  $outputs_max_burst            = $falco::params::outputs_max_burst,
+  Boolean $buffered_outputs = false,
+  Integer $outputs_rate = 1,
+  Integer $outputs_max_burst = 1000,
 
-  $syslog_output                = $falco::params::syslog_output,
-  $file_output                  = $falco::params::file_output,
-  $stdout_output                = $falco::params::stdout_output,
-  $webserver                    = $falco::params::webserver,
-  $program_output               = $falco::params::program_output,
-  $http_output                  = $falco::params::http_output,
+  Hash $syslog_output = {
+    'enabled' => true,
+  },
+  Hash $file_output = {
+    'enabled'    => false,
+    'keep_alive' => false,
+    'filename'   => '/var/log/falco-events.log',
+  },
+  Hash $stdout_output = {
+    'enabled' => true,
+  },
+  Hash $webserver = {
+    'enabled'              => false,
+    'listen_port'          => 8765,
+    'k8s_audit_endpoint'   => '/k8s-audit',
+    'k8s_healthz_endpoint' => '/healthz',
+    'ssl_enabled'          => false,
+    'ssl_certificate'      => '/etc/falco/falco.pem',
+  },
+  Hash $program_output = {
+    'enabled'    => false,
+    'keep_alive' => false,
+    'program'    => "jq '{text: .output}' | curl -d @- -X POST https://hooks.slack.com/services/XXX",
+  },
+  Hash $http_output = {
+    'enabled'    => false,
+    'url'        => 'http://some.url',
+    'user_agent' => '"falcosecurity/falco"',
+  },
 
   # Installation parameters
-  $package_ensure               = $falco::params::package_ensure,
+  String[1] $package_ensure = 'installed',
 
   # Service parameters
-  $service_ensure               = $falco::params::service_ensure,
-  $service_enable               = $falco::params::service_enable,
-  $service_restart              = $falco::params::service_restart,
-) inherits falco::params {
+  Variant[Boolean, Enum['running', 'stopped']] $service_ensure = 'running',
+  Boolean $service_enable = true,
+  Boolean $service_restart = true,
+) {
+  Class['falco::repo']
+  -> Class['falco::install']
+  -> Class['falco::config']
+  ~> Class['falco::service']
 
-  class { 'falco::repo': }
-  -> class { 'falco::install': }
-  -> class { 'falco::config': }
-  ~> class { 'falco::service': }
-
+  contain falco::repo
   contain falco::install
   contain falco::config
-
+  contain falco::service
 }
