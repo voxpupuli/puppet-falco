@@ -18,6 +18,7 @@ Falco is a behavioral activity monitor designed to detect anomalous activity in 
 - [Reference](#reference)
 - [Limitations](#limitations)
 - [Development](#development)
+  - [History](#history)
 
 ## What kind of behaviors can Falco detect?
 
@@ -52,7 +53,7 @@ When you declare this class with the default options, the module:
 
 ## Reference
 
-This module is documented via `bundle exec puppet strings generate --format markdown`. Please see [REFERENCE.md](REFERENCE.md) for more info.
+This module is documented via `bundle exec rake strings:generate:reference`. Please see [REFERENCE.md](REFERENCE.md) for more info.
 
 ## Limitations
 
@@ -61,3 +62,7 @@ The module works where Falco works as a daemonized service (generally, Linux onl
 ## Development
 
 PRs are welcome!
+
+### History
+
+This module is derrived from [falcosecurity/evolution](https://github.com/falcosecurity/evolution/tree/33a3025d1dedc3a6fbea814b8f3f80d275d6e3f0/integrations/puppet-module/falco). That code came from [falcosecurity/falco](https://github.com/falcosecurity/falco) as part of resolving issue [#1114](https://github.com/falcosecurity/falco/issues/1114). The old code is the basis for [sysdig/falco](https://forge.puppet.com/modules/sysdig/falco). [#2005](https://github.com/falcosecurity/falco/issues/2005) was submitted to request that module be depreciated since it appears to be abondoned.
