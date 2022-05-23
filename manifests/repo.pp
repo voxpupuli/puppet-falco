@@ -1,29 +1,32 @@
-# == Class: falco::repo
+# @summary Manages the repository falco is installed from
+#
+# Manages the repository falco is installed from
+#
 class falco::repo inherits falco {
-  case $::osfamily {
+  case $facts['os']['family'] {
     'Debian': {
-      include apt::update
+      include apt
 
-      Apt::Source[ 'falco' ]
-      -> Class[ 'apt::update' ]
+      Apt::Source['falco']
+      -> Class['apt::update']
 
       apt::source { 'falco':
         location => 'https://download.falco.org/packages/deb',
         release  => 'stable',
-        repos    => '',
+        repos    => 'main',
         key      => {
           source => 'https://falco.org/repo/falcosecurity-3672BA8F.asc',
-          id     => '3672BA8F'
+          id     => '3672BA8F',
         },
       }
 
-      ensure_packages(["linux-headers-${::kernelrelease}"])
+      ensure_packages(["linux-headers-${facts['kernelrelease']}"])
     }
     'RedHat': {
       include 'epel'
 
-      Yumrepo[ 'falco' ]
-      -> Class[ 'epel' ]
+      Yumrepo['falco']
+      -> Class['epel']
 
       yumrepo { 'falco':
         baseurl  => 'https://download.falco.org/packages/rpm',
@@ -32,10 +35,10 @@ class falco::repo inherits falco {
         gpgcheck => 0,
       }
 
-      ensure_packages(["kernel-devel-${::kernelrelease}"])
+      ensure_packages(["kernel-devel-${facts['kernelrelease']}"])
     }
     default: {
-      fail("\"${module_name}\" provides no repository information for OSfamily \"${::osfamily}\"")
+      fail("\"${module_name}\" provides no repository information for OSfamily \"${facts['os']['family']}\"")
     }
   }
 }
