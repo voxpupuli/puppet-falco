@@ -248,7 +248,7 @@ See the template for available keys.
 Default value: `{
     'enabled'    => false,
     'keep_alive' => false,
-    'program'    => "jq '{text: .output}' | curl -d @- -X POST https://hooks.slack.com/services/XXX",
+    'program'    => '"jq \'{text: .output}\' | curl -d @- -X POST https://hooks.slack.com/services/XXX"',
   }`
 
 ##### <a name="http_output"></a>`http_output`
