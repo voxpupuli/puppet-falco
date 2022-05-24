@@ -159,7 +159,7 @@ class falco (
   Hash $program_output = {
     'enabled'    => false,
     'keep_alive' => false,
-    'program'    => "jq '{text: .output}' | curl -d @- -X POST https://hooks.slack.com/services/XXX",
+    'program'    => '"jq \'{text: .output}\' | curl -d @- -X POST https://hooks.slack.com/services/XXX"',
   },
   Hash $http_output = {
     'enabled'    => false,
