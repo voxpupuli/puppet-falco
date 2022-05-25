@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.0.1](https://github.com/voxpupuli/puppet-falco/tree/v1.0.1) (2022-05-25)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v1.0.0...v1.0.1)
+
+**Closed issues:**
+
+- release workflow has wrong owner listed [\#9](https://github.com/voxpupuli/puppet-falco/issues/9)
+
 ## [v1.0.0](https://github.com/voxpupuli/puppet-falco/tree/v1.0.0) (2022-05-24)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v0.4.0...v1.0.0)
