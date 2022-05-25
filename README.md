@@ -48,12 +48,13 @@ class { 'falco': }
 When you declare this class with the default options, the module:
 
 - Installs the appropriate Falco software package and installs the falco-probe kernel module for your operating system.
-- Creates the required configuration file `/etc/falco/falco.yaml`. By default only syslog output is enabled.
+- Creates the required configuration file `/etc/falco/falco.yaml`.
+- Manages the local rules file `/etc/falco/falco_rules.local.yaml`.
 - Starts the Falco service.
 
 ## Reference
 
-This module is documented via `bundle exec rake strings:generate:reference`. Please see [REFERENCE.md](REFERENCE.md) for more info.
+This module is documented via `bundle exec rake strings:generate:reference`. Please see [REFERENCE.md](REFERENCE.md) for more info and example usage.
 
 ## Limitations
 
