@@ -28,6 +28,56 @@
 #     },
 #   }
 #
+# @example Create local rule
+#   class { 'falco':
+#     local_rules => [{
+#       'rule'      => 'The program "sudo" is run in a container',
+#       'desc'      => 'An event will trigger every time you run sudo in a container',
+#       'condition' => 'evt.type = execve and evt.dir=< and container.id != host and proc.name = sudo',
+#       'output'    => 'Sudo run in container (user=%user.name %container.info parent=%proc.pname cmdline=%proc.cmdline)',
+#       'priority'  => 'ERROR',
+#       'tags'      => ['users', 'container'],
+#     }],
+#   }
+#
+# @example Local rules, lists, and macro
+#   class { 'falco':
+#     local_rules => [
+#       {
+#         'rule'      => 'The program "sudo" is run in a container',
+#         'desc'      => 'An event will trigger every time you run sudo in a container',
+#         'condition' => 'evt.type = execve and evt.dir=< and container.id != host and proc.name = sudo',
+#         'output'    => 'Sudo run in container (user=%user.name %container.info parent=%proc.pname cmdline=%proc.cmdline)',
+#         'priority'  => 'ERROR',
+#         'tags'      => ['users', 'container'],
+#       },
+#       {
+#         'rule'      => 'rule 2',
+#         'desc'      => 'describing rule 2',
+#         'condition' => 'evt.type = execve and evt.dir=< and container.id != host and proc.name = sudo',
+#         'output'    => 'Sudo run in container (user=%user.name %container.info parent=%proc.pname cmdline=%proc.cmdline)',
+#         'priority'  => 'ERROR',
+#         'tags'      => ['users'],
+#       },
+#       {
+#         'list'  => 'shell_binaries',
+#         'items' => ['bash', 'csh', 'ksh', 'sh', 'tcsh', 'zsh', 'dash'],
+#       },
+#       {
+#         'list'  => 'userexec_binaries',
+#         'items' => ['sudo', 'su'],
+#       },
+#       {
+#         'list'  => 'known_binaries',
+#         'items' => ['shell_binaries', 'userexec_binaries'],
+#       },
+#       {
+#         'macro'     => 'safe_procs',
+#         'condition' => 'proc.name in (known_binaries)',
+#       }
+#     ],
+#   }
+#
 # @param [Array] rules_file
 #   File(s) or Directories containing Falco rules, loaded at startup.
 #   The name "rules_file" is only for backwards compatibility.
@@ -41,6 +91,9 @@
 #
 #   The files will be read in the order presented here, so make sure if
 #   you have overrides they appear in later files.
+#
+# @param [Array[Hash]] local_rules
+#   An array of hashes of rules to be added to /etc/falco/falco_rules.local.yaml
 #
 # @param [Boolean] json_output
 #   Whether to output events in json or text
@@ -125,6 +178,7 @@ class falco (
     '/etc/falco/k8s_audit_rules.yaml',
     '/etc/falco/rules.d',
   ],
+  Array[Hash] $local_rules = [],
   Boolean $json_output = false,
   Boolean $json_include_output_property = true,
 
