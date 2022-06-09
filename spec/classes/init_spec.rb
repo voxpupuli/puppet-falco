@@ -30,6 +30,16 @@ describe 'falco' do
           it { is_expected.to contain_class('epel') }
           it { is_expected.to contain_yumrepo('falco') }
           it { is_expected.to contain_package("kernel-devel-#{facts[:kernelrelease]}") }
+        when 'Suse'
+          it { is_expected.to contain_zypprepo('falcosecurity-rpm') }
+          it { is_expected.to contain_package('kernel-default-devel') }
+          it { is_expected.to contain_rpmkey('3672BA8F') }
+
+          case facts[:os]['release']['full']
+          when '12.5'
+            it { is_expected.to contain_rpmkey('3A6A4D911FCCBD0A') }
+            it { is_expected.to contain_zypprepo('home:BuR_Industrial_Automation:SLE-12-SP5:basesystem (SLE_12_SP5)') }
+          end
         end
 
         it { is_expected.to contain_class('falco::install') }
