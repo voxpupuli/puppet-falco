@@ -7,10 +7,10 @@
 ### Classes
 
 * [`falco`](#falco): Guides the basic setup and installation of Falco on your system.
-* [`falco::config`](#falcoconfig): Controls the contents of falco.yaml and sets up log rotate, if needed
-* [`falco::install`](#falcoinstall): Installs the falco package
-* [`falco::repo`](#falcorepo): Manages the repository falco is installed from
-* [`falco::service`](#falcoservice): Controls the state of the falco service
+* [`falco::config`](#falco--config): Controls the contents of falco.yaml and sets up log rotate, if needed
+* [`falco::install`](#falco--install): Installs the falco package
+* [`falco::repo`](#falco--repo): Manages the repository falco is installed from
+* [`falco::service`](#falco--service): Controls the state of the falco service
 
 ## Classes
 
@@ -115,29 +115,29 @@ class { 'falco':
 
 The following parameters are available in the `falco` class:
 
-* [`rules_file`](#rules_file)
-* [`local_rules`](#local_rules)
-* [`json_output`](#json_output)
-* [`json_include_output_property`](#json_include_output_property)
-* [`log_stderr`](#log_stderr)
-* [`log_syslog`](#log_syslog)
-* [`log_level`](#log_level)
-* [`priority`](#priority)
-* [`buffered_outputs`](#buffered_outputs)
-* [`outputs_rate`](#outputs_rate)
-* [`outputs_max_burst`](#outputs_max_burst)
-* [`syslog_output`](#syslog_output)
-* [`file_output`](#file_output)
-* [`stdout_output`](#stdout_output)
-* [`webserver`](#webserver)
-* [`program_output`](#program_output)
-* [`http_output`](#http_output)
-* [`package_ensure`](#package_ensure)
-* [`service_ensure`](#service_ensure)
-* [`service_enable`](#service_enable)
-* [`service_restart`](#service_restart)
+* [`rules_file`](#-falco--rules_file)
+* [`local_rules`](#-falco--local_rules)
+* [`json_output`](#-falco--json_output)
+* [`json_include_output_property`](#-falco--json_include_output_property)
+* [`log_stderr`](#-falco--log_stderr)
+* [`log_syslog`](#-falco--log_syslog)
+* [`log_level`](#-falco--log_level)
+* [`priority`](#-falco--priority)
+* [`buffered_outputs`](#-falco--buffered_outputs)
+* [`outputs_rate`](#-falco--outputs_rate)
+* [`outputs_max_burst`](#-falco--outputs_max_burst)
+* [`syslog_output`](#-falco--syslog_output)
+* [`file_output`](#-falco--file_output)
+* [`stdout_output`](#-falco--stdout_output)
+* [`webserver`](#-falco--webserver)
+* [`program_output`](#-falco--program_output)
+* [`http_output`](#-falco--http_output)
+* [`package_ensure`](#-falco--package_ensure)
+* [`service_ensure`](#-falco--service_ensure)
+* [`service_enable`](#-falco--service_enable)
+* [`service_restart`](#-falco--service_restart)
 
-##### <a name="rules_file"></a>`rules_file`
+##### <a name="-falco--rules_file"></a>`rules_file`
 
 Data type: `Array`
 
@@ -154,14 +154,18 @@ your customizations to falco_rules.local.yaml.
 The files will be read in the order presented here, so make sure if
 you have overrides they appear in later files.
 
-Default value: `[
+Default value:
+
+```puppet
+[
     '/etc/falco/falco_rules.yaml',
     '/etc/falco/falco_rules.local.yaml',
     '/etc/falco/k8s_audit_rules.yaml',
     '/etc/falco/rules.d',
-  ]`
+  ]
+```
 
-##### <a name="local_rules"></a>`local_rules`
+##### <a name="-falco--local_rules"></a>`local_rules`
 
 Data type: `Array[Hash]`
 
@@ -169,15 +173,15 @@ An array of hashes of rules to be added to /etc/falco/falco_rules.local.yaml
 
 Default value: `[]`
 
-##### <a name="json_output"></a>`json_output`
+##### <a name="-falco--json_output"></a>`json_output`
 
 Data type: `Boolean`
 
 Whether to output events in json or text
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="json_include_output_property"></a>`json_include_output_property`
+##### <a name="-falco--json_include_output_property"></a>`json_include_output_property`
 
 Data type: `Boolean`
 
@@ -185,27 +189,27 @@ When using json output, whether or not to include the "output" property
 itself (e.g. "File below a known binary directory opened for writing
 (user=root ....") in the json output.
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="log_stderr"></a>`log_stderr`
-
-Data type: `Boolean`
-
-Send information logs to stderr Note these are *not* security
-notification logs! These are just Falco lifecycle (and possibly error) logs.
-
-Default value: ``true``
-
-##### <a name="log_syslog"></a>`log_syslog`
+##### <a name="-falco--log_stderr"></a>`log_stderr`
 
 Data type: `Boolean`
 
 Send information logs to stderr Note these are *not* security
 notification logs! These are just Falco lifecycle (and possibly error) logs.
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="log_level"></a>`log_level`
+##### <a name="-falco--log_syslog"></a>`log_syslog`
+
+Data type: `Boolean`
+
+Send information logs to stderr Note these are *not* security
+notification logs! These are just Falco lifecycle (and possibly error) logs.
+
+Default value: `true`
+
+##### <a name="-falco--log_level"></a>`log_level`
 
 Data type: `Enum['alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug']`
 
@@ -216,7 +220,7 @@ log level of falco's internal logging. Can be one of "emergency",
 
 Default value: `'info'`
 
-##### <a name="priority"></a>`priority`
+##### <a name="-falco--priority"></a>`priority`
 
 Data type: `Enum['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'informational', 'debug']`
 
@@ -227,16 +231,16 @@ of "emergency", "alert", "critical", "error", "warning", "notice",
 
 Default value: `'debug'`
 
-##### <a name="buffered_outputs"></a>`buffered_outputs`
+##### <a name="-falco--buffered_outputs"></a>`buffered_outputs`
 
 Data type: `Boolean`
 
 Whether or not output to any of the output channels below is
 buffered. Defaults to false
 
-Default value: ``false``
+Default value: `false`
 
-##### <a name="outputs_rate"></a>`outputs_rate`
+##### <a name="-falco--outputs_rate"></a>`outputs_rate`
 
 Data type: `Integer`
 
@@ -244,7 +248,7 @@ The number of tokens (i.e. right to send a notification) gained per second.
 
 Default value: `1`
 
-##### <a name="outputs_max_burst"></a>`outputs_max_burst`
+##### <a name="-falco--outputs_max_burst"></a>`outputs_max_burst`
 
 Data type: `Integer`
 
@@ -252,84 +256,108 @@ The maximum number of tokens outstanding.
 
 Default value: `1000`
 
-##### <a name="syslog_output"></a>`syslog_output`
+##### <a name="-falco--syslog_output"></a>`syslog_output`
 
 Data type: `Hash`
 
 A hash to configure the syslog output.
 See the template for available keys.
 
-Default value: `{
-    'enabled' => true,
-  }`
+Default value:
 
-##### <a name="file_output"></a>`file_output`
+```puppet
+{
+    'enabled' => true,
+  }
+```
+
+##### <a name="-falco--file_output"></a>`file_output`
 
 Data type: `Hash`
 
 A hash to configure the file output.
 See the template for available keys.
 
-Default value: `{
+Default value:
+
+```puppet
+{
     'enabled'    => false,
     'keep_alive' => false,
     'filename'   => '/var/log/falco-events.log',
-  }`
+  }
+```
 
-##### <a name="stdout_output"></a>`stdout_output`
+##### <a name="-falco--stdout_output"></a>`stdout_output`
 
 Data type: `Hash`
 
 A hash to configure the stdout output.
 See the template for available keys.
 
-Default value: `{
-    'enabled' => true,
-  }`
+Default value:
 
-##### <a name="webserver"></a>`webserver`
+```puppet
+{
+    'enabled' => true,
+  }
+```
+
+##### <a name="-falco--webserver"></a>`webserver`
 
 Data type: `Hash`
 
 A has to configure the webserver.
 See the template for available keys.
 
-Default value: `{
+Default value:
+
+```puppet
+{
     'enabled'              => false,
     'listen_port'          => 8765,
     'k8s_audit_endpoint'   => '/k8s-audit',
     'k8s_healthz_endpoint' => '/healthz',
     'ssl_enabled'          => false,
     'ssl_certificate'      => '/etc/falco/falco.pem',
-  }`
+  }
+```
 
-##### <a name="program_output"></a>`program_output`
+##### <a name="-falco--program_output"></a>`program_output`
 
 Data type: `Hash`
 
 A hash to configure the program output.
 See the template for available keys.
 
-Default value: `{
+Default value:
+
+```puppet
+{
     'enabled'    => false,
     'keep_alive' => false,
     'program'    => '"jq \'{text: .output}\' | curl -d @- -X POST https://hooks.slack.com/services/XXX"',
-  }`
+  }
+```
 
-##### <a name="http_output"></a>`http_output`
+##### <a name="-falco--http_output"></a>`http_output`
 
 Data type: `Hash`
 
 A hash to configure the http output.
 See the template for available keys.
 
-Default value: `{
+Default value:
+
+```puppet
+{
     'enabled'    => false,
     'url'        => 'http://some.url',
     'user_agent' => '"falcosecurity/falco"',
-  }`
+  }
+```
 
-##### <a name="package_ensure"></a>`package_ensure`
+##### <a name="-falco--package_ensure"></a>`package_ensure`
 
 Data type: `String[1]`
 
@@ -337,7 +365,7 @@ A string to be passed to the package resource's ensure parameter
 
 Default value: `'installed'`
 
-##### <a name="service_ensure"></a>`service_ensure`
+##### <a name="-falco--service_ensure"></a>`service_ensure`
 
 Data type: `Variant[Boolean, Enum['running', 'stopped']]`
 
@@ -345,35 +373,35 @@ Desired state of the Falco service
 
 Default value: `'running'`
 
-##### <a name="service_enable"></a>`service_enable`
+##### <a name="-falco--service_enable"></a>`service_enable`
 
 Data type: `Boolean`
 
 Start the Falco service on boot?
 
-Default value: ``true``
+Default value: `true`
 
-##### <a name="service_restart"></a>`service_restart`
+##### <a name="-falco--service_restart"></a>`service_restart`
 
 Data type: `Boolean`
 
 Does the service support restarting?
 
-Default value: ``true``
+Default value: `true`
 
-### <a name="falcoconfig"></a>`falco::config`
+### <a name="falco--config"></a>`falco::config`
 
 Controls the contents of falco.yaml and sets up log rotate, if needed
 
-### <a name="falcoinstall"></a>`falco::install`
+### <a name="falco--install"></a>`falco::install`
 
 Installs the falco package
 
-### <a name="falcorepo"></a>`falco::repo`
+### <a name="falco--repo"></a>`falco::repo`
 
 Manages the repository falco is installed from
 
-### <a name="falcoservice"></a>`falco::service`
+### <a name="falco--service"></a>`falco::service`
 
 Controls the state of the falco service
 
