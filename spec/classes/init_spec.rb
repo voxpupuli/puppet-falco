@@ -24,6 +24,7 @@ describe 'falco' do
 
         case facts[:os]['family']
         when 'Debian'
+          it { is_expected.to contain_apt__key('falcosecurity') }
           it { is_expected.to contain_apt__source('falco') }
           it { is_expected.to contain_package("linux-headers-#{facts[:kernelrelease]}") }
         when 'RedHat'
@@ -33,7 +34,7 @@ describe 'falco' do
         when 'Suse'
           it { is_expected.to contain_zypprepo('falcosecurity-rpm') }
           it { is_expected.to contain_package('kernel-default-devel') }
-          it { is_expected.to contain_rpmkey('3672BA8F') }
+          it { is_expected.to contain_rpmkey('4021833E14CB7A8D') }
 
           case facts[:os]['release']['full']
           when '12.5'

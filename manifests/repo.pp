@@ -10,14 +10,16 @@ class falco::repo inherits falco {
       Apt::Source['falco']
       -> Class['apt::update']
 
+      apt::key { 'falcosecurity':
+        ensure => 'refreshed',
+        source => 'https://falco.org/repo/falcosecurity-packages.asc',
+        id     => '2005399002D5E8FF59F28CE64021833E14CB7A8D', # finger print of key id 4021833E14CB7A8D
+      }
+
       apt::source { 'falco':
         location => 'https://download.falco.org/packages/deb',
         release  => 'stable',
         repos    => 'main',
-        key      => {
-          source => 'https://falco.org/repo/falcosecurity-3672BA8F.asc',
-          id     => '3672BA8F',
-        },
       }
 
       ensure_packages(["linux-headers-${facts['kernelrelease']}"])
@@ -56,9 +58,9 @@ class falco::repo inherits falco {
         }
       }
 
-      rpmkey { '3672BA8F':
+      rpmkey { '4021833E14CB7A8D':
         ensure => present,
-        source => 'https://falco.org/repo/falcosecurity-3672BA8F',
+        source => 'https://falco.org/repo/falcosecurity-packages.asc',
         before => Zypprepo['falcosecurity-rpm'],
       }
 
@@ -66,7 +68,7 @@ class falco::repo inherits falco {
         name          => 'falcosecurity-rpm',
         baseurl       => 'https://download.falco.org/packages/rpm',
         gpgcheck      => 1,
-        gpgkey        => 'https://falco.org/repo/falcosecurity-3672BA8F',
+        gpgkey        => 'https://falco.org/repo/falcosecurity-packages.asc',
         repo_gpgcheck => 0,
         enabled       => 1,
       }
