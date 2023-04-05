@@ -62,6 +62,11 @@ plugins:
 # load_plugins: [cloudtrail, json]
 load_plugins: []
 
+# Watch config file and rules files for modification.
+# When a file is modified, Falco will propagate new config,
+# by reloading itself.
+watch_config_files: <%= @watch_config_files %>
+
 # If true, the times displayed in log messages and output messages
 # will be in ISO 8601. By default, times are displayed in the local
 # time zone, as governed by /etc/localtime.
@@ -97,6 +102,19 @@ log_level: <%= @log_level %>
 # of "emergency", "alert", "critical", "error", "warning", "notice",
 # "informational", "debug".
 priority: <%= @priority %>
+
+# Falco is capable of managing the logs coming from libs. If enabled,
+# the libs logger send its log records the same outputs supported by
+# Falco (stderr and syslog). Disabled by default.
+<% unless @libs_logger.nil? -%>
+libs_logger:
+  enabled: <%= @libs_logger['enabled'] %>
+  # Minimum log severity to include in the libs logs. Note: this value is
+  # separate from the log level of the Falco logger and does not affect it.
+  # Can be one of "fatal", "critical", "error", "warning", "notice",
+  # "info", "debug", "trace".
+  severity: <%= @libs_logger['severity'] %>
+<% end -%>
 
 # Whether or not output to any of the output channels below is
 # buffered. Defaults to false
@@ -149,6 +167,135 @@ syscall_event_drops:
 
 syscall_event_timeouts:
   max_consecutives: 1000
+
+# Enabling this option allows Falco to drop failed syscalls exit events
+# in the kernel driver before the event is pushed onto the ring buffer.
+# This can enable some small optimization both in CPU usage and ring buffer usage,
+# possibly leading to lower number of event losses.
+# Be careful: enabling it also means losing a bit of visibility on the system.
+syscall_drop_failed_exit: false
+
+# --- [Description]
+#
+# This is an index that controls the dimension of the syscall buffers.
+# The syscall buffer is the shared space between Falco and its drivers where all the syscall events
+# are stored.
+# Falco uses a syscall buffer for every online CPU, and all these buffers share the same dimension.
+# So this parameter allows you to control the size of all the buffers!
+#
+# --- [Usage]
+#
+# You can choose between different indexes: from `1` to `10` (`0` is reserved for future uses).
+# Every index corresponds to a dimension in bytes:
+#
+# [(*), 1 MB, 2 MB, 4 MB, 8 MB, 16 MB, 32 MB, 64 MB, 128 MB, 256 MB, 512 MB]
+#   ^    ^     ^     ^     ^     ^      ^      ^       ^       ^       ^
+#   |    |     |     |     |     |      |      |       |       |       |
+#   0    1     2     3     4     5      6      7       8       9       10
+#
+# As you can see the `0` index is reserved, while the index `1` corresponds to
+# `1 MB` and so on.
+#
+# These dimensions in bytes derive from the fact that the buffer size must be:
+# (1) a power of 2.
+# (2) a multiple of your system_page_dimension.
+# (3) greater than `2 * (system_page_dimension)`.
+#
+# According to these constraints is possible that sometimes you cannot use all the indexes, let's consider an
+# example to better understand it:
+# If you have a `page_size` of 1 MB the first available buffer size is 4 MB because 2 MB is exactly
+# `2 * (system_page_size)` -> `2 * 1 MB`, but this is not enough we need more than `2 * (system_page_size)`!
+# So from this example is clear that if you have a page size of 1 MB the first index that you can use is `3`.
+#
+# Please note: this is a very extreme case just to let you understand the mechanism, usually the page size is something
+# like 4 KB so you have no problem at all and you can use all the indexes (from `1` to `10`).
+#
+# To check your system page size use the Falco `--page-size` command line option. The output on a system with a page
+# size of 4096 Bytes (4 KB) should be the following:
+#
+# "Your system page size is: 4096 bytes."
+#
+# --- [Suggestions]
+#
+# Before the introduction of this param the buffer size was fixed to 8 MB (so index `4`, as you can see
+# in the default value below).
+# You can increase the buffer size when you face syscall drops. A size of 16 MB (so index `5`) can reduce
+# syscall drops in production-heavy systems without noticeable impact. Very large buffers however could
+# slow down the entire machine.
+# On the other side you can try to reduce the buffer size to speed up the system, but this could
+# increase the number of syscall drops!
+# As a final remark consider that the buffer size is mapped twice in the process' virtual memory so a buffer of 8 MB
+# will result in a 16 MB area in the process virtual memory.
+# Please pay attention when you use this parameter and change it only if the default size doesn't fit your use case.
+
+syscall_buf_size_preset: <%= @syscall_buf_size_preset %>
+
+############## [EXPERIMENTAL] Modern BPF probe specific ##############
+# Please note: these configs regard only the modern BPF probe. They
+# are experimental so they could change over releases.
+#
+# `cpus_for_each_syscall_buffer`
+#
+# --- [Description]
+#
+# This is an index that controls how many CPUs you want to assign to a single
+# syscall buffer (ring buffer). By default, every syscall buffer is associated to
+# 2 CPUs, so the mapping is 1:2. The modern BPF probe allows you to choose different
+# mappings, for example, 1:1 would mean a syscall buffer for each CPU.
+#
+# --- [Usage]
+#
+# You can choose between different indexes: from `0` to `MAX_NUMBER_ONLINE_CPUs`.
+# `0` is a special value and it means a single syscall buffer shared between all
+# your online CPUs. `0` has the same effect as `MAX_NUMBER_ONLINE_CPUs`, the rationale
+# is that `0` allows you to create a single buffer without knowing the number of online
+# CPUs on your system.
+# Let's consider an example to better understand it:
+#
+# Consider a system with 7 online CPUs:
+#
+#          CPUs     0  X  2  3  X  X  6  7  8  9   (X means offline CPU)
+#
+# - `1` means a syscall buffer for each CPU so 7 buffers
+#
+#          CPUs     0  X  2  3  X  X  6  7  8  9   (X means offline CPU)
+#                   |     |  |        |  |  |  |
+#       BUFFERs     0     1  2        3  4  5  6
+#
+# - `2` (Default value) means a syscall buffer for each CPU pair, so 4 buffers
+#
+#          CPUs     0  X  2  3  X  X  6  7  8  9   (X means offline CPU)
+#                   |     |  |        |  |  |  |
+#       BUFFERs     0     0  1        1  2  2  3
+#
+# Please note that we need 4 buffers, 3 buffers are associated with CPU pairs, the last
+# one is mapped with just 1 CPU since we have an odd number of CPUs.
+#
+# - `0` or `MAX_NUMBER_ONLINE_CPUs` mean a syscall buffer shared between all CPUs, so 1 buffer
+#
+#          CPUs     0  X  2  3  X  X  6  7  8  9   (X means offline CPU)
+#                   |     |  |        |  |  |  |
+#       BUFFERs     0     0  0        0  0  0  0
+#
+# Moreover you can combine this param with `syscall_buf_size_preset`
+# index, for example, you could create a huge single syscall buffer
+# shared between all your online CPUs of 512 MB (so `syscall_buf_size_preset=10`).
+#
+# --- [Suggestions]
+#
+# We chose index `2` (so one syscall buffer for each CPU pair) as default because the modern bpf probe
+# follows a different memory allocation strategy with respect to the other 2 drivers (bpf and kernel module).
+# By the way, you are free to find the preferred configuration for your system.
+# Considering a fixed `syscall_buf_size_preset` and so a fixed buffer dimension:
+# - a lower number of buffers can speed up your system (lower memory footprint)
+# - a too lower number of buffers could increase contention in the kernel causing an
+#   overall slowdown of the system.
+# If you don't have huge events throughputs and you are not experimenting with tons of drops
+# you can try to reduce the number of buffers to have a lower memory footprint
+
+modern_bpf:
+  cpus_for_each_syscall_buffer: 2
+############## [EXPERIMENTAL] Modern BPF probe specific ##############
 
 # Falco continuously monitors outputs performance. When an output channel does not allow
 # to deliver an alert within a given deadline, an error is reported indicating
