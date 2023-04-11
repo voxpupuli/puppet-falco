@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.2.0](https://github.com/voxpupuli/puppet-falco/tree/v1.2.0) (2023-04-11)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v1.1.0...v1.2.0)
+
+**Implemented enhancements:**
+
+- Add support for SUSE Linux, add EL 9 to metadata [\#13](https://github.com/voxpupuli/puppet-falco/pull/13) ([genebean](https://github.com/genebean))
+
+**Fixed bugs:**
+
+- Apt key errors [\#16](https://github.com/voxpupuli/puppet-falco/issues/16)
+- Update repo keys [\#17](https://github.com/voxpupuli/puppet-falco/pull/17) ([genebean](https://github.com/genebean))
+
 ## [v1.1.0](https://github.com/voxpupuli/puppet-falco/tree/v1.1.0) (2022-06-01)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v1.0.1...v1.1.0)
