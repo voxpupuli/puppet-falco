@@ -157,6 +157,11 @@
 #   A hash to configure the http output.
 #   See the template for available keys.
 #
+# @param [Enum['bpf', 'modern-bpf', 'kmod']] driver 
+#  The desired Falco driver.
+#  Can be one of "bpf", "modern-bpf", "kmod".
+#  Defaults to "kmod"
+#
 # @param [String[1]] package_ensure
 #   A string to be passed to the package resource's ensure parameter
 #
@@ -168,6 +173,9 @@
 #
 # @param [Boolean] service_restart
 #    Does the service support restarting?
+#
+# @param [Boolean] auto_ruleset_updates
+#    Enable automatic rule updates?
 #
 #
 class falco (
@@ -221,13 +229,16 @@ class falco (
     'user_agent' => '"falcosecurity/falco"',
   },
 
+  Enum['bpf', 'modern-bpf', 'kmod'] $driver = 'kmod',
+
   # Installation parameters
-  String[1] $package_ensure = 'installed',
+  String[1] $package_ensure = '>= 0.34',
 
   # Service parameters
   Variant[Boolean, Enum['running', 'stopped']] $service_ensure = 'running',
   Boolean $service_enable = true,
   Boolean $service_restart = true,
+  Boolean $auto_ruleset_updates = true,
 ) {
   Class['falco::repo']
   -> Class['falco::install']
