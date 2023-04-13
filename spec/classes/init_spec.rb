@@ -63,7 +63,18 @@ describe 'falco' do
         }
 
         it { is_expected.to contain_class('falco::service') }
-        it { is_expected.to contain_service('falco') }
+        it { is_expected.to contain_service('falco-kmod') }
+      end
+
+      context 'with alternate driver' do
+        let(:driver) { 'bpf' }
+        let(:params) do
+          {
+            'driver' => driver
+          }
+        end
+
+        it { is_expected.to contain_service("falco-#{driver}") }
       end
 
       context 'with file_output defined' do

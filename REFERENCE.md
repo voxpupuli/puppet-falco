@@ -132,6 +132,7 @@ The following parameters are available in the `falco` class:
 * [`webserver`](#-falco--webserver)
 * [`program_output`](#-falco--program_output)
 * [`http_output`](#-falco--http_output)
+* [`driver`](#-falco--driver)
 * [`package_ensure`](#-falco--package_ensure)
 * [`service_ensure`](#-falco--service_ensure)
 * [`service_enable`](#-falco--service_enable)
@@ -357,13 +358,23 @@ Default value:
   }
 ```
 
+##### <a name="-falco--driver"></a>`driver`
+
+Data type: `Enum['bpf', 'modern-bpf', 'kmod']`
+
+The desired Falco driver.
+Can be one of "bpf", "modern-bpf", "kmod".
+Defaults to "kmod"
+
+Default value: `'kmod'`
+
 ##### <a name="-falco--package_ensure"></a>`package_ensure`
 
 Data type: `String[1]`
 
 A string to be passed to the package resource's ensure parameter
 
-Default value: `'installed'`
+Default value: `'>= 0.34'`
 
 ##### <a name="-falco--service_ensure"></a>`service_ensure`
 
