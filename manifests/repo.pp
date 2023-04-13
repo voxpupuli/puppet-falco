@@ -21,8 +21,6 @@ class falco::repo inherits falco {
         release  => 'stable',
         repos    => 'main',
       }
-
-      ensure_packages(["linux-headers-${facts['kernelrelease']}"])
     }
     'RedHat': {
       include 'epel'
@@ -36,8 +34,6 @@ class falco::repo inherits falco {
         enabled  => 1,
         gpgcheck => 0,
       }
-
-      ensure_packages(["kernel-devel-${facts['kernelrelease']}"])
     }
     'Suse': {
       if $facts['os']['release']['full'] == '12.5' {
@@ -72,8 +68,6 @@ class falco::repo inherits falco {
         repo_gpgcheck => 0,
         enabled       => 1,
       }
-
-      ensure_packages(['kernel-default-devel'])
     }
     default: {
       fail("\"${module_name}\" provides no repository information for OSfamily \"${facts['os']['family']}\"")

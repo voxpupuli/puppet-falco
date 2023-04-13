@@ -6,6 +6,7 @@ describe 'falco' do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) { facts }
+      let(:suse_kernel_patch_level) { '120' }
 
       context 'with defaults for all parameters' do
         it { is_expected.to compile.with_all_deps }
@@ -22,6 +23,9 @@ describe 'falco' do
 
         it { is_expected.to contain_class('falco::repo') }
 
+        it { is_expected.to contain_package('dkms') }
+        it { is_expected.to contain_package('make') }
+
         case facts[:os]['family']
         when 'Debian'
           it { is_expected.to contain_apt__key('falcosecurity') }
@@ -33,7 +37,7 @@ describe 'falco' do
           it { is_expected.to contain_package("kernel-devel-#{facts[:kernelrelease]}") }
         when 'Suse'
           it { is_expected.to contain_zypprepo('falcosecurity-rpm') }
-          it { is_expected.to contain_package('kernel-default-devel') }
+          it { is_expected.to contain_package("kernel-default-devel-#{facts[:kernelversion]}-#{suse_kernel_patch_level}") }
           it { is_expected.to contain_rpmkey('4021833E14CB7A8D') }
 
           case facts[:os]['release']['full']
