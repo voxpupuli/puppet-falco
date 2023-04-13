@@ -48,6 +48,7 @@ describe 'falco' do
         end
 
         it { is_expected.to contain_class('falco::install') }
+        it { is_expected.to contain_exec('falco-driver-loader module --compile') }
         it { is_expected.to contain_package('falco') }
 
         it { is_expected.to contain_class('falco::config') }
@@ -66,12 +67,35 @@ describe 'falco' do
         it { is_expected.to contain_service('falco-kmod') }
       end
 
-      context 'with alternate driver' do
+      context 'with bpf driver' do
         let(:driver) { 'bpf' }
         let(:params) do
           {
             'driver' => driver
           }
+        end
+
+        it { is_expected.to contain_exec("falco-driver-loader #{driver} --compile") }
+        it { is_expected.to contain_service("falco-#{driver}") }
+      end
+
+      context 'with modern-bpf driver' do
+        let(:driver) { 'modern-bpf' }
+        let(:params) do
+          {
+            'driver' => driver
+          }
+        end
+
+        it { is_expected.not_to contain_exec("falco-driver-loader #{driver} --compile") }
+
+        case facts[:os]['family']
+        when 'Debian'
+          it { is_expected.not_to contain_package("linux-headers-#{facts[:kernelrelease]}") }
+        when 'RedHat'
+          it { is_expected.not_to contain_package("kernel-devel-#{facts[:kernelrelease]}") }
+        when 'Suse'
+          it { is_expected.not_to contain_package("kernel-default-devel-#{facts[:kernelversion]}-#{suse_kernel_patch_level}") }
         end
 
         it { is_expected.to contain_service("falco-#{driver}") }
