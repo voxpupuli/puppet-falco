@@ -174,6 +174,9 @@
 # @param [Boolean] service_restart
 #    Does the service support restarting?
 #
+# @param [Boolean] auto_ruleset_updates
+#    Enable automatic rule updates?
+#
 #
 class falco (
   # Configuration parameters
@@ -235,6 +238,7 @@ class falco (
   Variant[Boolean, Enum['running', 'stopped']] $service_ensure = 'running',
   Boolean $service_enable = true,
   Boolean $service_restart = true,
+  Boolean $auto_ruleset_updates = true,
 ) {
   Class['falco::repo']
   -> Class['falco::install']

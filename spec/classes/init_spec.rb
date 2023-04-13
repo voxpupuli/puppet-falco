@@ -101,6 +101,16 @@ describe 'falco' do
         it { is_expected.to contain_service("falco-#{driver}") }
       end
 
+      context 'with auto_ruleset_updates disabled' do
+        let(:params) do
+          {
+            'auto_ruleset_updates' => false
+          }
+        end
+
+        it { is_expected.to contain_service('falcoctl-artifact-follow').with_ensure('stopped').with_enable('mask') }
+      end
+
       context 'with file_output defined' do
         let(:params) do
           {

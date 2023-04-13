@@ -10,7 +10,7 @@
 * [`falco::config`](#falco--config): Controls the contents of falco.yaml and sets up log rotate, if needed
 * [`falco::install`](#falco--install): Installs the falco package
 * [`falco::repo`](#falco--repo): Manages the repository falco is installed from
-* [`falco::service`](#falco--service): Controls the state of the falco service
+* [`falco::service`](#falco--service): Controls the state of the falco and falcoctl services
 
 ## Classes
 
@@ -137,6 +137,7 @@ The following parameters are available in the `falco` class:
 * [`service_ensure`](#-falco--service_ensure)
 * [`service_enable`](#-falco--service_enable)
 * [`service_restart`](#-falco--service_restart)
+* [`auto_ruleset_updates`](#-falco--auto_ruleset_updates)
 
 ##### <a name="-falco--rules_file"></a>`rules_file`
 
@@ -400,6 +401,14 @@ Does the service support restarting?
 
 Default value: `true`
 
+##### <a name="-falco--auto_ruleset_updates"></a>`auto_ruleset_updates`
+
+Data type: `Boolean`
+
+Enable automatic rule updates?
+
+Default value: `true`
+
 ### <a name="falco--config"></a>`falco::config`
 
 Controls the contents of falco.yaml and sets up log rotate, if needed
@@ -414,5 +423,5 @@ Manages the repository falco is installed from
 
 ### <a name="falco--service"></a>`falco::service`
 
-Controls the state of the falco service
+Controls the state of the falco and falcoctl services
 
