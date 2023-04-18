@@ -95,6 +95,10 @@
 # @param [Array[Hash]] local_rules
 #   An array of hashes of rules to be added to /etc/falco/falco_rules.local.yaml
 #
+# @param [Boolean] watch_config_files
+#   Whether to do a hot reload upon modification of the config
+#   file or any loaded rule file
+#
 # @param [Boolean] json_output
 #   Whether to output events in json or text
 #
@@ -187,6 +191,7 @@ class falco (
     '/etc/falco/rules.d',
   ],
   Array[Hash] $local_rules = [],
+  Boolean $watch_config_files = true,
   Boolean $json_output = false,
   Boolean $json_include_output_property = true,
 
