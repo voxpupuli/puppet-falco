@@ -138,6 +138,7 @@ The following parameters are available in the `falco` class:
 * [`service_enable`](#-falco--service_enable)
 * [`service_restart`](#-falco--service_restart)
 * [`auto_ruleset_updates`](#-falco--auto_ruleset_updates)
+* [`manage_repo`](#-falco--manage_repo)
 
 ##### <a name="-falco--rules_file"></a>`rules_file`
 
@@ -406,6 +407,15 @@ Default value: `true`
 Data type: `Boolean`
 
 Enable automatic rule updates?
+
+Default value: `true`
+
+##### <a name="-falco--manage_repo"></a>`manage_repo`
+
+Data type: `Boolean`
+
+When true, let the module manage the repositories.
+Default is true.
 
 Default value: `true`
 
