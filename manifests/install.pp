@@ -40,11 +40,27 @@ class falco::install inherits falco {
       default  => fail("The module \"${module_name}\" does not yet support \"${facts['os']['family']}\""),
     }
 
-    exec { "falco-driver-loader ${_driver_type} --compile":
-      creates   => $_kernel_mod_path,
-      path      => '/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin',
-      subscribe => Package[$_running_kernel_devel_package, 'falco'],
-      notify    => Service["falco-${falco::driver}"],
+    case $_driver_type {
+      'module': {
+        exec { "falco-driver-loader ${_driver_type} --compile":
+          creates   => $_kernel_mod_path,
+          path      => '/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin',
+          subscribe => Package[$_running_kernel_devel_package, 'falco'],
+          notify    => Service["falco-${falco::driver}"],
+        }
+      }
+      'bpf': {
+        exec { "falco-driver-loader ${_driver_type} --compile":
+          creates     => "/root/.falco/${facts['falco_driver_version']}/${facts['os']['architecture']}/falco_${downcase($::operatingsystem)}_${facts['kernelrelease']}_1.o", # lint:ignore:140chars
+          environment => ['HOME=/root'],
+          path        => '/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin',
+          subscribe   => Package[$_running_kernel_devel_package, 'falco'],
+          notify      => Service["falco-${falco::driver}"],
+        }
+      }
+      default: {
+        fail("The driver \"${_driver_type}\" is not yet supported by either the module \"${module_name}\" or \"falco-driver-loader\"") # lint:ignore:140chars
+      }
     }
   }
 }
