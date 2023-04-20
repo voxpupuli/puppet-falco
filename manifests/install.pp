@@ -24,7 +24,7 @@ class falco::install inherits falco {
       ensure_packages($_package_deps, { 'before' => Package['falco'] })
     } elsif $falco::driver == 'bpf' {
       $_bpf_package_deps = ['llvm','clang','make']
-      ensure_packages($_bpf_package_deps, { 'before' => Package['falco']})
+      ensure_packages($_bpf_package_deps, { 'before' => Package['falco'] })
     }
 
     $_driver_type = $falco::driver ? {
