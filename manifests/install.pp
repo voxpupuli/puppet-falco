@@ -51,7 +51,7 @@ class falco::install inherits falco {
       }
       'bpf': {
         exec { "falco-driver-loader ${_driver_type} --compile":
-          creates     => "/root/.falco/${facts['falco_driver_version']}/${facts['os']['architecture']}/falco_${downcase($::operatingsystem)}_${facts['kernelrelease']}_1.o", # lint:ignore:140chars
+          creates     => "/root/.falco/${facts['falco_driver_version']}/${facts['os']['architecture']}/falco_${downcase($facts['os']['name'])}_${facts['kernelrelease']}_1.o", # lint:ignore:140chars
           environment => ['HOME=/root'],
           path        => '/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin',
           subscribe   => Package[$_running_kernel_devel_package, 'falco'],
