@@ -177,7 +177,7 @@
 # @param [Boolean] auto_ruleset_updates
 #    Enable automatic rule updates?
 #
-# @param [Boolean] manage_repo
+# @param manage_repo
 #    When true, let the module manage the repositories.
 #    Default is true.
 #
