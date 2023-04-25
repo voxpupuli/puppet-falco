@@ -25,6 +25,8 @@ describe 'falco' do
 
         it { is_expected.to contain_package('dkms') }
         it { is_expected.to contain_package('make') }
+        it { is_expected.to contain_package('llvm') }
+        it { is_expected.to contain_package('clang') }
 
         case facts[:os]['family']
         when 'Debian'
@@ -75,9 +77,6 @@ describe 'falco' do
           }
         end
 
-        it { is_expected.to contain_package('make') }
-        it { is_expected.to contain_package('llvm') }
-        it { is_expected.to contain_package('clang') }
         it { is_expected.to contain_exec("falco-driver-loader #{driver} --compile") }
         it { is_expected.to contain_service("falco-#{driver}") }
       end
