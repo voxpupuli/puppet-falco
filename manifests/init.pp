@@ -180,6 +180,11 @@
 # @param manage_dependencies
 #    Enable managing of dependencies?
 #
+# @param manage_repo
+#    When true, let the module manage the repositories.
+#    Default is true.
+#
+#
 class falco (
   # Configuration parameters
   Array $rules_file = [
@@ -232,6 +237,8 @@ class falco (
   },
 
   Enum['bpf', 'modern-bpf', 'kmod'] $driver = 'kmod',
+
+  Boolean $manage_repo = true,
 
   # Installation parameters
   String[1] $package_ensure = '>= 0.34',
