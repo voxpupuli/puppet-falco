@@ -417,6 +417,8 @@ Data type: `Boolean`
 
 Enable managing of dependencies?
 
+Default value: `true`
+
 ##### <a name="-falco--manage_repo"></a>`manage_repo`
 
 Data type: `Boolean`
