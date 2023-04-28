@@ -22,7 +22,7 @@ class falco::config inherits falco {
 
   $_file_output = $falco::file_output
 
-  if ($_file_output != undef) {
+  if ($_file_output != undef) and ($_file_output['enabled']) {
     logrotate::rule { 'falco_output':
       path          => $_file_output['filename'],
       rotate        => 5,
