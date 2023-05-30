@@ -125,6 +125,19 @@ describe 'falco' do
         it { is_expected.to contain_logrotate__rule('falco_output').with_path('/var/log/somefolder/falco-events.log') }
       end
 
+      context 'with file_output disabled' do
+        let(:params) do
+          {
+            'file_output' => {
+              'enabled' => false,
+            }
+          }
+        end
+
+        it { is_expected.not_to contain_class('logrotate::rule') }
+        it { is_expected.not_to contain_logrotate__rule('falco_output') }
+      end
+
       context 'with local_rules value specified' do
         # rubocop:disable Style/WordArray
         let(:params) do
