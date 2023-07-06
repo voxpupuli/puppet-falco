@@ -68,6 +68,11 @@ describe 'falco' do
       end
 
       context 'with bpf driver' do
+        let(:facts) do
+          facts.merge(
+            { falco_driver_version: '5.0.1+driver' }
+          )
+        end
         let(:driver) { 'bpf' }
         let(:params) do
           {
@@ -75,7 +80,12 @@ describe 'falco' do
           }
         end
 
-        it { is_expected.to contain_exec("falco-driver-loader #{driver} --compile") }
+        it {
+          is_expected.to contain_exec("falco-driver-loader #{driver} --compile").with(
+            { creates: "/root/.falco/5.0.1+driver/#{facts[:architecture]}/falco_#{facts[:operatingsystem].downcase}_#{facts[:kernelrelease]}_1.o" }
+          )
+        }
+
         it { is_expected.to contain_service("falco-#{driver}") }
       end
 
