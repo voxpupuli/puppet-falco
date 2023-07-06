@@ -78,7 +78,7 @@
 #     ],
 #   }
 #
-# @param [Array] rules_file
+# @param rules_file
 #   File(s) or Directories containing Falco rules, loaded at startup.
 #   The name "rules_file" is only for backwards compatibility.
 #   If the entry is a file, it will be read directly. If the entry is a directory,
@@ -92,89 +92,93 @@
 #   The files will be read in the order presented here, so make sure if
 #   you have overrides they appear in later files.
 #
-# @param [Array[Hash]] local_rules
+# @param local_rules
 #   An array of hashes of rules to be added to /etc/falco/falco_rules.local.yaml
 #
-# @param [Boolean] json_output
+# @param watch_config_files
+#   Whether to do a hot reload upon modification of the config
+#   file or any loaded rule file
+#
+# @param json_output
 #   Whether to output events in json or text
 #
-# @param [Boolean] json_include_output_property
+# @param json_include_output_property
 #   When using json output, whether or not to include the "output" property
 #   itself (e.g. "File below a known binary directory opened for writing
 #   (user=root ....") in the json output.
 #
-# @param [Boolean] log_stderr
+# @param log_stderr
 #   Send information logs to stderr Note these are *not* security
 #   notification logs! These are just Falco lifecycle (and possibly error) logs.
 #
-# @param [Boolean] log_syslog
+# @param log_syslog
 #   Send information logs to stderr Note these are *not* security
 #   notification logs! These are just Falco lifecycle (and possibly error) logs.
 #
-# @param [Enum['alert', 'critical', 'error', 'warning', 'notice', 'info', 'debug']] log_level
+# @param log_level
 #   Minimum log level to include in logs. Note: these levels are
 #   separate from the priority field of rules. This refers only to the
 #   log level of falco's internal logging. Can be one of "emergency",
 #   "alert", "critical", "error", "warning", "notice", "info", "debug".
 #
-# @param [Enum['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'informational', 'debug']] priority
+# @param priority
 #   Minimum rule priority level to load and run. All rules having a
 #   priority more severe than this level will be loaded/run.  Can be one
 #   of "emergency", "alert", "critical", "error", "warning", "notice",
 #   "informational", "debug".
 #
-# @param [Boolean] buffered_outputs
+# @param buffered_outputs
 #   Whether or not output to any of the output channels below is
 #   buffered. Defaults to false
 #
-# @param [Integer] outputs_rate
+# @param outputs_rate
 #   The number of tokens (i.e. right to send a notification) gained per second.
 #
-# @param [Integer] outputs_max_burst
+# @param outputs_max_burst
 #   The maximum number of tokens outstanding.
 #
-# @param [Hash] syslog_output
+# @param syslog_output
 #   A hash to configure the syslog output.
 #   See the template for available keys.
 #
-# @param [Hash] file_output
+# @param file_output
 #   A hash to configure the file output.
 #   See the template for available keys.
 #
-# @param [Hash] stdout_output
+# @param stdout_output
 #   A hash to configure the stdout output.
 #   See the template for available keys.
 #
-# @param [Hash] webserver
+# @param webserver
 #   A has to configure the webserver.
 #   See the template for available keys.
 #
-# @param [Hash] program_output
+# @param program_output
 #   A hash to configure the program output.
 #   See the template for available keys.
 #
-# @param [Hash] http_output
+# @param http_output
 #   A hash to configure the http output.
 #   See the template for available keys.
 #
-# @param [Enum['bpf', 'modern-bpf', 'kmod']] driver 
+# @param driver
 #  The desired Falco driver.
 #  Can be one of "bpf", "modern-bpf", "kmod".
 #  Defaults to "kmod"
 #
-# @param [String[1]] package_ensure
+# @param package_ensure
 #   A string to be passed to the package resource's ensure parameter
 #
-# @param [Variant[Boolean, Enum['running', 'stopped']]] service_ensure
+# @param service_ensure
 #    Desired state of the Falco service
 #
-# @param [Boolean] service_enable
+# @param service_enable
 #    Start the Falco service on boot?
 #
-# @param [Boolean] service_restart
+# @param service_restart
 #    Does the service support restarting?
 #
-# @param [Boolean] auto_ruleset_updates
+# @param auto_ruleset_updates
 #    Enable automatic rule updates?
 #
 # @param manage_repo
@@ -191,6 +195,7 @@ class falco (
     '/etc/falco/rules.d',
   ],
   Array[Hash] $local_rules = [],
+  Boolean $watch_config_files = true,
   Boolean $json_output = false,
   Boolean $json_include_output_property = true,
 

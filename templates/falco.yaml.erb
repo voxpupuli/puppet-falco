@@ -62,6 +62,11 @@ plugins:
 # load_plugins: [cloudtrail, json]
 load_plugins: []
 
+# Watch config file and rules files for modification.
+# When a file is modified, Falco will propagate new config,
+# by reloading itself.
+watch_config_files: <%= @watch_config_files %>
+
 # If true, the times displayed in log messages and output messages
 # will be in ISO 8601. By default, times are displayed in the local
 # time zone, as governed by /etc/localtime.
