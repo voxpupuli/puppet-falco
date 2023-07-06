@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.0.0](https://github.com/voxpupuli/puppet-falco/tree/v3.0.0) (2023-07-06)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v2.0.0...v3.0.0)
+
+**Breaking changes:**
+
+- Drop Puppet 6 support [\#27](https://github.com/voxpupuli/puppet-falco/pull/27) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add feature flag to enable/disable managing of the falco repository [\#24](https://github.com/voxpupuli/puppet-falco/pull/24) ([jordyb6](https://github.com/jordyb6))
+- Add watch\_config \_files parameter [\#23](https://github.com/voxpupuli/puppet-falco/pull/23) ([jordyb6](https://github.com/jordyb6))
+
+**Fixed bugs:**
+
+- Make falco file output really optional [\#28](https://github.com/voxpupuli/puppet-falco/pull/28) ([claviola](https://github.com/claviola))
+- Fix falco-driver-loader bpf [\#26](https://github.com/voxpupuli/puppet-falco/pull/26) ([jordyb6](https://github.com/jordyb6))
+- Fix: Add missing dependencies when building bpf probe [\#25](https://github.com/voxpupuli/puppet-falco/pull/25) ([jordyb6](https://github.com/jordyb6))
+
 ## [v2.0.0](https://github.com/voxpupuli/puppet-falco/tree/v2.0.0) (2023-04-13)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v1.2.0...v2.0.0)
@@ -46,6 +65,7 @@ These should not affect the functionality of the module.
 [Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v0.4.0...v1.0.0)
 
 This is the first release as part of Vox Pupuli.
+
 This module is derrived from [falcosecurity/evolution](https://github.com/falcosecurity/evolution/tree/33a3025d1dedc3a6fbea814b8f3f80d275d6e3f0/integrations/puppet-module/falco). That code came from [falcosecurity/falco](https://github.com/falcosecurity/falco) as part of resolving issue https://github.com/falcosecurity/falco/issues/1114. The old code is the basis for [sysdig/falco](https://forge.puppet.com/modules/sysdig/falco). https://github.com/falcosecurity/falco/issues/2005 was submitted to request that module be depreciated since it appears to be abandoned.
 
 The v1.0.0 release includes an overhaul of the code to make everything work and bring it up to current coding standards. It also incorporates all the change needed as part of migrating a module to Vox Pupuli.
