@@ -181,6 +181,9 @@
 # @param auto_ruleset_updates
 #    Enable automatic rule updates?
 #
+# @param manage_dependencies
+#    Enable managing of dependencies?
+#
 # @param manage_repo
 #    When true, let the module manage the repositories.
 #    Default is true.
@@ -250,6 +253,7 @@ class falco (
   Boolean $service_enable = true,
   Boolean $service_restart = true,
   Boolean $auto_ruleset_updates = true,
+  Boolean $manage_dependencies = true,
 ) {
   Class['falco::repo']
   -> Class['falco::install']

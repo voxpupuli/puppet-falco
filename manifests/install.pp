@@ -19,8 +19,12 @@ class falco::install inherits falco {
     }
     ensure_packages([$_running_kernel_devel_package], { 'before' => Package['falco'] })
 
-    $_package_deps = ['dkms', 'make']
-    ensure_packages($_package_deps, { 'before' => Package['falco'] })
+    if $falco::manage_dependencies {
+      $_package_deps = ['dkms', 'make']
+      ensure_packages($_package_deps, { 'before' => Package['falco'] })
+      $_bpf_package_deps = ['llvm','clang']
+      ensure_packages($_bpf_package_deps, { 'before' => Package['falco'] })
+    }
 
     $_driver_type = $falco::driver ? {
       'kmod'  => 'module',
