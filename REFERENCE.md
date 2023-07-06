@@ -180,7 +180,8 @@ Default value: `[]`
 
 Data type: `Boolean`
 
-Whether to do a hot reload upon modification of the config file or any loaded rule file
+Whether to do a hot reload upon modification of the config
+file or any loaded rule file
 
 Default value: `true`
 
