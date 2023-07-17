@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.0.1](https://github.com/voxpupuli/puppet-falco/tree/v3.0.1) (2023-07-17)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v3.0.0...v3.0.1)
+
+**Merged pull requests:**
+
+- Fix falco fact [\#31](https://github.com/voxpupuli/puppet-falco/pull/31) ([hunner](https://github.com/hunner))
+
 ## [v3.0.0](https://github.com/voxpupuli/puppet-falco/tree/v3.0.0) (2023-07-06)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-falco/compare/v2.0.0...v3.0.0)
