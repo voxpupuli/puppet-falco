@@ -84,7 +84,7 @@ describe 'falco' do
 
         it {
           is_expected.to contain_exec("falco-driver-loader #{driver} --compile").with(
-            { creates: "/root/.falco/5.0.1+driver/#{facts[:architecture]}/falco_#{facts[:operatingsystem].downcase}_#{facts[:kernelrelease]}_1.o" }
+            { creates: "/root/.falco/5.0.1+driver/#{facts[:os]['architecture']}/falco_#{facts[:os]['name'].downcase}_#{facts[:kernelrelease]}_1.o" }
           )
         }
 
