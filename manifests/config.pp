@@ -11,13 +11,13 @@ class falco::config inherits falco {
       mode    => '0644',
       require => Class['falco::install'],
       notify  => Service["falco-${falco::driver}"],
-      ;
+    ;
     '/etc/falco/falco.yaml':
       content => template('falco/falco.yaml.erb'),
-      ;
+    ;
     '/etc/falco/falco_rules.local.yaml':
       content => epp('falco/falco_rules.local.yaml.epp', { 'local_rules' => $falco::local_rules, }),
-      ;
+    ;
   }
 
   $_file_output = $falco::file_output
