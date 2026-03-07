@@ -12,13 +12,13 @@ describe 'falco' do
         it { is_expected.to compile.with_all_deps }
 
         it {
-          is_expected.to contain_class('falco').
-            with_rules_file([
-                              '/etc/falco/falco_rules.yaml',
-                              '/etc/falco/falco_rules.local.yaml',
-                              '/etc/falco/k8s_audit_rules.yaml',
-                              '/etc/falco/rules.d'
-                            ])
+          is_expected.to contain_class('falco')
+            .with_rules_file([
+                               '/etc/falco/falco_rules.yaml',
+                               '/etc/falco/falco_rules.local.yaml',
+                               '/etc/falco/k8s_audit_rules.yaml',
+                               '/etc/falco/rules.d',
+                             ])
         }
 
         it { is_expected.to contain_class('falco::repo') }
@@ -56,13 +56,13 @@ describe 'falco' do
         it { is_expected.to contain_class('falco::config') }
 
         it {
-          is_expected.to contain_file('/etc/falco/falco.yaml').
-            with_content(%r{rules_file:\n  - /etc/falco/falco_rules.yaml\n})
+          is_expected.to contain_file('/etc/falco/falco.yaml')
+            .with_content(%r{rules_file:\n  - /etc/falco/falco_rules.yaml\n})
         }
 
         it {
-          is_expected.to contain_file('/etc/falco/falco_rules.local.yaml').
-            with_content(%r{# Or override/append to any rule, macro, or list from the Default Rules\n\n$})
+          is_expected.to contain_file('/etc/falco/falco_rules.local.yaml')
+            .with_content(%r{# Or override/append to any rule, macro, or list from the Default Rules\n\n$})
         }
 
         it { is_expected.to contain_class('falco::service') }
@@ -72,19 +72,19 @@ describe 'falco' do
       context 'with bpf driver' do
         let(:facts) do
           facts.merge(
-            { falco_driver_version: '5.0.1+driver' }
+            { falco_driver_version: '5.0.1+driver' },
           )
         end
         let(:driver) { 'bpf' }
         let(:params) do
           {
-            'driver' => driver
+            'driver' => driver,
           }
         end
 
         it {
           is_expected.to contain_exec("falco-driver-loader #{driver} --compile").with(
-            { creates: "/root/.falco/5.0.1+driver/#{facts[:os]['architecture']}/falco_#{facts[:os]['name'].downcase}_#{facts[:kernelrelease]}_1.o" }
+            { creates: "/root/.falco/5.0.1+driver/#{facts[:os]['architecture']}/falco_#{facts[:os]['name'].downcase}_#{facts[:kernelrelease]}_1.o" },
           )
         }
 
@@ -95,7 +95,7 @@ describe 'falco' do
         let(:driver) { 'modern-bpf' }
         let(:params) do
           {
-            'driver' => driver
+            'driver' => driver,
           }
         end
 
@@ -116,7 +116,7 @@ describe 'falco' do
       context 'with auto_ruleset_updates disabled' do
         let(:params) do
           {
-            'auto_ruleset_updates' => false
+            'auto_ruleset_updates' => false,
           }
         end
 
@@ -129,8 +129,8 @@ describe 'falco' do
             'file_output' => {
               'enabled' => true,
               'keep_alive' => false,
-              'filename' => '/var/log/somefolder/falco-events.log'
-            }
+              'filename' => '/var/log/somefolder/falco-events.log',
+            },
           }
         end
 
@@ -142,7 +142,7 @@ describe 'falco' do
           {
             'file_output' => {
               'enabled' => false,
-            }
+            },
           }
         end
 
@@ -186,7 +186,7 @@ describe 'falco' do
               {
                 'macro' => 'safe_procs',
                 'condition' => 'proc.name in (known_binaries)',
-              }
+              },
             ],
           }
         end
@@ -210,12 +210,12 @@ describe 'falco' do
             'rule' => 'The program "sudo" is run in a container',
             # The two lines below are important to validate because they get reformatted if the line_width param is not passed to to_yaml
             'condition' => 'evt.type = execve and evt.dir=< and container.id != host and proc.name = sudo',
-            'output' => 'Sudo run in container (user=%user.name %container.info parent=%proc.pname cmdline=%proc.cmdline)'
+            'output' => 'Sudo run in container (user=%user.name %container.info parent=%proc.pname cmdline=%proc.cmdline)',
           )
 
           expect(parsed_content[1]).to include(
             'rule' => 'rule 2',
-            'tags' => ['users']
+            'tags' => ['users'],
           )
 
           expect(parsed_content[2]).to include('list' => 'shell_binaries')
@@ -226,7 +226,7 @@ describe 'falco' do
 
           expect(parsed_content[5]).to include(
             'macro' => 'safe_procs',
-            'condition' => 'proc.name in (known_binaries)'
+            'condition' => 'proc.name in (known_binaries)',
           )
         end
       end
