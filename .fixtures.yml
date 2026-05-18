@@ -1,8 +1,7 @@
+---
 fixtures:
   repositories:
-    apt:
-      repo: https://github.com/puppetlabs/puppetlabs-apt.git
-      tag: v10.0.1
+    apt: https://github.com/puppetlabs/puppetlabs-apt.git
     epel: https://github.com/voxpupuli/puppet-epel.git
     logrotate: https://github.com/voxpupuli/puppet-logrotate.git
     rpmkey: https://github.com/stschulte/puppet-rpmkey.git
