@@ -453,4 +453,3 @@ Manages the repository falco is installed from
 ### <a name="falco--service"></a>`falco::service`
 
 Controls the state of the falco and falcoctl services
-
