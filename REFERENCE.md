@@ -387,7 +387,7 @@ Data type: `String[1]`
 
 A string to be passed to the package resource's ensure parameter
 
-Default value: `'>= 0.34'`
+Default value: `'>=0.34'`
 
 ##### <a name="-falco--service_ensure"></a>`service_ensure`
 
