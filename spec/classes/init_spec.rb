@@ -40,7 +40,7 @@ describe 'falco' do
         when 'Suse'
           it { is_expected.to contain_zypprepo('falcosecurity-rpm') }
           it { is_expected.to contain_package("kernel-default-devel-#{facts[:kernelversion]}-#{suse_kernel_patch_level}") }
-          it { is_expected.to contain_rpmkey('4021833E14CB7A8D') }
+          it { is_expected.to contain_rpmkey('65106822B35B1B1F') }
 
           case facts[:os]['release']['full']
           when '12.5'

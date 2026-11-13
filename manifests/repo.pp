@@ -14,7 +14,7 @@ class falco::repo inherits falco {
         apt::key { 'falcosecurity':
           ensure => 'refreshed',
           source => 'https://falco.org/repo/falcosecurity-packages.asc',
-          id     => '2005399002D5E8FF59F28CE64021833E14CB7A8D', # finger print of key id 4021833E14CB7A8D
+          id     => '478B2FBBC75F4237B731DA4365106822B35B1B1F', # finger print of key id 65106822B35B1B1F
         }
 
         apt::source { 'falco':
@@ -55,7 +55,7 @@ class falco::repo inherits falco {
           }
         }
 
-        rpmkey { '4021833E14CB7A8D':
+        rpmkey { '65106822B35B1B1F':
           ensure => present,
           source => 'https://falco.org/repo/falcosecurity-packages.asc',
           before => Zypprepo['falcosecurity-rpm'],
